@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Fundo.Applications.Domain.Responses
+namespace Fundo.Applications.Domain.Responses.Loans
 {
-    public record class GetAllLoansResponse(IReadOnlyList<LoanModel> LoanModels);
+    public record class GetLoanByIdResponse(LoanModel Model);
 }

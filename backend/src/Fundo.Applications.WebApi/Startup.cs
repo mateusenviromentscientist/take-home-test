@@ -1,6 +1,9 @@
-﻿using Fundo.Aplications.Aplication.Interfaces.Services;
+﻿using Fundo.Aplications.Aplication.Interfaces.Repositories;
+using Fundo.Aplications.Aplication.Interfaces.Services;
 using Fundo.Applications.Infra.Context;
 using Fundo.Applications.Infra.Identity;
+using Fundo.Applications.Infra.Repositories;
+using Fundo.Applications.WebApi.Middlewares;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -11,6 +14,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Serilog;
 using System;
 using System.Text;
 
@@ -73,6 +77,8 @@ namespace Fundo.Applications.WebApi
             services.AddAuthorization();
 
             services.AddScoped<ITokenServices, TokenService>();
+            services.AddScoped<IIdentityService, IdentityService>();
+            services.AddScoped<ILoanRepository, LoanRepository>();
 
             services.AddSwaggerGen(c =>
             {
@@ -115,10 +121,13 @@ namespace Fundo.Applications.WebApi
 
             }
 
+            app.UseSerilogRequestLogging();
+
             app.UseHttpsRedirection();
 
-            app.UseRouting();
+            app.UseMiddleware<ExceptionMiddleware>();
 
+            app.UseRouting();
 
             app.UseAuthentication();
             app.UseAuthorization();

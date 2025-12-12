@@ -4,7 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Fundo.Applications.Domain.Requests
+namespace Fundo.Aplications.Aplication.UseCases.Loans
 {
-    public record class GetAllLoansRequest();
+    internal class GetLoanByIdUseCase
+    {
+    }
 }

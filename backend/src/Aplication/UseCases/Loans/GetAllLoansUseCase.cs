@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Fundo.Aplications.Aplication.Validators
+namespace Fundo.Aplications.Aplication.UseCases.Loans
 {
-    internal class CreateLoanValidator
+    internal class GetAllLoansUseCase
     {
     }
 }

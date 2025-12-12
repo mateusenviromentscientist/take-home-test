@@ -4,9 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Fundo.Aplications.Aplication.UseCases.Loans
+namespace Fundo.Applications.Domain.Responses.Auth
 {
-    internal class GetAllLoans
-    {
-    }
+    public sealed record class LoginUserResponse (string Token);
 }

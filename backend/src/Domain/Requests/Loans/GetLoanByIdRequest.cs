@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Fundo.Applications.Domain.Responses
+namespace Fundo.Applications.Domain.Requests.Loans
 {
-    public record class CreateLoanResponse(bool Success);
+    public record class GetLoanByIdRequest(int Id);
 }

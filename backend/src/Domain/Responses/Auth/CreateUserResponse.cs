@@ -4,9 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Fundo.Aplications.Aplication.Validators
+namespace Fundo.Applications.Domain.Responses.Auth
 {
-    internal class GetLoanByIdValidator
-    {
-    }
+    public sealed record class CreateUserResponse (string Token);
 }
