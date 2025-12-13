@@ -1,33 +1,43 @@
 ﻿using Fundo.Aplications.Aplication.Interfaces.Repositories;
 using Fundo.Applications.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Fundo.Applications.Infra.Context;
+using Microsoft.EntityFrameworkCore;
 
 namespace Fundo.Applications.Infra.Repositories
 {
     public class LoanRepository : ILoanRepository
     {
-        public Task<bool> CreateLoan(LoanModel model, CancellationToken cancellationToken)
+        private readonly AppDbContext _appContext;
+
+        public LoanRepository(AppDbContext appContext)
         {
-            throw new NotImplementedException();
+            _appContext = appContext;
         }
 
-        public Task<IReadOnlyList<LoanModel>> GetAllLoans(CancellationToken cancellationToken)
+        public async Task<bool> CreateLoanAsync(LoanModel model, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
-        }
+            await _appContext.AddAsync(model, cancellationToken);
 
-        public Task<LoanModel> GetLoanModelById(int id, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
+            await _appContext.SaveChangesAsync(cancellationToken);
 
-        public Task<bool> UpdateLoanPayment(int id, LoanModel model, CancellationToken cancellationToken)
+            return true;
+        }
+        
+        public async Task<IReadOnlyList<LoanModel>> GetAllLoansAsync(CancellationToken cancellationToken) =>
+            await _appContext.Loans.AsNoTracking().ToListAsync(cancellationToken);
+
+
+        public async Task<LoanModel?> GetLoanModelByIdAsync(int id, CancellationToken cancellationToken) =>
+            await _appContext.Loans.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+        
+
+        public async Task<bool> UpdateLoanPaymentAsync(LoanModel model, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            _appContext.Update(model);
+
+            await _appContext.SaveChangesAsync(cancellationToken);
+
+            return true;
         }
     }
 }

@@ -91,13 +91,13 @@ namespace Fundo.Applications.WebApi
             services.AddScoped<CreateLoanUseCase>();
             services.AddScoped<GetAllLoansUseCase>();
             services.AddScoped<GetLoanByIdUseCase>();
-            services.AddScoped<PaidLoanUseCase>();
+            services.AddScoped<PayLoanUseCase>();
 
             services.AddScoped<IValidator<CreateUserRequest>, CreateUserValidator>();
             services.AddScoped<IValidator<LoginRequest>, LoginUserValidator>();
             services.AddScoped<IValidator<CreateLoanRequest>, CreateLoanValidator>();
             services.AddScoped<IValidator<GetLoanByIdRequest>, GetLoanByIdValidator>();
-            services.AddScoped<IValidator<PaidLoanRequest>, PaidLoanValidator>();
+            services.AddScoped<IValidator<PayLoanRequest>, PayLoanValidator>();
 
             services.AddSwaggerGen(c =>
             {

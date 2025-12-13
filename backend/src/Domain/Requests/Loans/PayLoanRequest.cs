@@ -6,5 +6,5 @@ using System.Threading.Tasks;
 
 namespace Fundo.Applications.Domain.Requests.Loans
 {
-    public record class GetAllLoansRequest();
+    public record class PayLoanRequest(int Id, decimal Amount);
 }
