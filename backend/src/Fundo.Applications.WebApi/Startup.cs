@@ -1,5 +1,12 @@
-﻿using Fundo.Aplications.Aplication.Interfaces.Repositories;
+﻿using FluentValidation;
+using Fundo.Aplications.Aplication.Interfaces.Repositories;
 using Fundo.Aplications.Aplication.Interfaces.Services;
+using Fundo.Aplications.Aplication.UseCases.Auth;
+using Fundo.Aplications.Aplication.UseCases.Loans;
+using Fundo.Aplications.Aplication.Validators.Auth;
+using Fundo.Aplications.Aplication.Validators.Loans;
+using Fundo.Applications.Domain.Requests.Auth;
+using Fundo.Applications.Domain.Requests.Loans;
 using Fundo.Applications.Infra.Context;
 using Fundo.Applications.Infra.Identity;
 using Fundo.Applications.Infra.Repositories;
@@ -79,6 +86,18 @@ namespace Fundo.Applications.WebApi
             services.AddScoped<ITokenServices, TokenService>();
             services.AddScoped<IIdentityService, IdentityService>();
             services.AddScoped<ILoanRepository, LoanRepository>();
+            services.AddScoped<CreateUserUseCase>();
+            services.AddScoped<LoginUserUseCase>();
+            services.AddScoped<CreateLoanUseCase>();
+            services.AddScoped<GetAllLoansUseCase>();
+            services.AddScoped<GetLoanByIdUseCase>();
+            services.AddScoped<PaidLoanUseCase>();
+
+            services.AddScoped<IValidator<CreateUserRequest>, CreateUserValidator>();
+            services.AddScoped<IValidator<LoginRequest>, LoginUserValidator>();
+            services.AddScoped<IValidator<CreateLoanRequest>, CreateLoanValidator>();
+            services.AddScoped<IValidator<GetLoanByIdRequest>, GetLoanByIdValidator>();
+            services.AddScoped<IValidator<PaidLoanRequest>, PaidLoanValidator>();
 
             services.AddSwaggerGen(c =>
             {

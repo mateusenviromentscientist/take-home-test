@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Fundo.Aplications.Aplication.UseCases.Loans
 {
-    internal class CreateLoanUseCase
+    public sealed class CreateLoanUseCase
     {
     }
 }
