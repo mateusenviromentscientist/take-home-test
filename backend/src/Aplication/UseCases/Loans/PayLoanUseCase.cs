@@ -1,9 +1,6 @@
 ﻿using FluentValidation;
 using Fundo.Aplications.Aplication.Interfaces.Repositories;
-using Fundo.Aplications.Aplication.Interfaces.Services;
-using Fundo.Aplications.Aplication.UseCases.Auth;
 using Fundo.Applications.Domain.Entities;
-using Fundo.Applications.Domain.Requests.Auth;
 using Fundo.Applications.Domain.Requests.Loans;
 using Fundo.Applications.Domain.Responses.Loans;
 using Microsoft.Extensions.Logging;

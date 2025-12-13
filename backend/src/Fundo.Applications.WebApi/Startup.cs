@@ -15,15 +15,18 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using System;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Fundo.Applications.WebApi
 {
@@ -58,28 +61,32 @@ namespace Fundo.Applications.WebApi
 
             var jwtKey = Configuration["Jwt:Key"];
             if (string.IsNullOrWhiteSpace(jwtKey))
-                throw new InvalidOperationException("JWT Key não configurada (Jwt:Key).");
+                throw new InvalidOperationException("JWT Key was not configured.");
 
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(opt =>
-                {
-                    opt.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateIssuer = true,
-                        ValidateAudience = true,
-                        ValidateLifetime = true,
-                        ValidateIssuerSigningKey = true,
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(opt =>
+            {
+                opt.TokenValidationParameters = new TokenValidationParameters
+            {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
 
-                        ValidIssuer = Configuration["Jwt:Issuer"],
-                        ValidAudience = Configuration["Jwt:Audience"],
+                    ValidIssuer = Configuration["Jwt:Issuer"],
+                    ValidAudience = Configuration["Jwt:Audience"],
 
-                        IssuerSigningKey = new SymmetricSecurityKey(
-                            Encoding.UTF8.GetBytes(jwtKey)
-                        ),
+                    IssuerSigningKey = new SymmetricSecurityKey(
+                        Convert.FromBase64String(Configuration["Jwt:Key"]!)
+                    ),
 
-                        ClockSkew = TimeSpan.FromMinutes(1)
-                    };
-                });
+                    ClockSkew = TimeSpan.FromMinutes(1)
+                };
+            });
 
             services.AddAuthorization();
 
@@ -155,6 +162,7 @@ namespace Fundo.Applications.WebApi
             {
                 endpoints.MapControllers();
             });
+
         }
     }
 }

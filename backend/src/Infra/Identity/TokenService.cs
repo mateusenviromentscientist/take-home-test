@@ -56,7 +56,8 @@ namespace Fundo.Applications.Infra.Identity
             foreach (var role in user.Roles)
                 claims.Add(new Claim(ClaimTypes.Role, role));
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey));
+            var key = new SymmetricSecurityKey(Convert.FromBase64String(_configuration["Jwt:Key"]!));
+
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var expires = DateTime.UtcNow.AddHours(2);
