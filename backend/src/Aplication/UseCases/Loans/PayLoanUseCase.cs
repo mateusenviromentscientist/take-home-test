@@ -73,7 +73,7 @@ namespace Fundo.Aplications.Aplication.UseCases.Loans
                 return (false, "Amount should be not greather than current Balance");
             }
 
-            model.CurrentBalance = request.Amount - model.CurrentBalance;
+            model.CurrentBalance = model.CurrentBalance - request.Amount;
 
             if (model.CurrentBalance == 0)
                 model.Status = Applications.Domain.Enums.LoanStatus.Paid;

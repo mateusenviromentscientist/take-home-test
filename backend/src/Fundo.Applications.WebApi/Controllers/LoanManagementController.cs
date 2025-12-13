@@ -1,6 +1,5 @@
 ﻿using Fundo.Aplications.Aplication.UseCases.Loans;
 using Fundo.Applications.Domain.Requests.Loans;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -55,7 +54,7 @@ namespace Fundo.Applications.WebApi.Controllers
 
             var result = await _createLoanUseCase.CreateLoanAsync(request, cancellationToken);
 
-            return CreatedAtRoute("loans", result);
+            return Created("loans", result);
         }
 
         [HttpPost("{id:int}/payment")]
@@ -65,7 +64,7 @@ namespace Fundo.Applications.WebApi.Controllers
 
             var result = await _payLoanUseCase.PayLoanAsync(request, cancellationToken);
 
-            return CreatedAtRoute("{id:int}/payment", result);
+            return Created("{id:int}/payment", result);
         }
     }
 }
