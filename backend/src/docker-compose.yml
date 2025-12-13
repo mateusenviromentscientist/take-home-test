@@ -1,0 +1,41 @@
+version: "3.9"
+
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: fundo-sqlserver
+    ports:
+      - "1433:1433"
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "Your_password123"
+      PATH: "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+      MSSQL_RPC_PORT: "135"
+      CONFIG_EDGE_BUILD: ""
+      MSSQL_PID: "developer"
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+    networks:
+      - fundo-network
+
+  api:
+    container_name: fundo-api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - sqlserver
+    ports:
+      - "5000:80"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__Default: "Server=sqlserver,1433;Database=FundoDb;User Id=sa;Password=Your_password123;TrustServerCertificate=True"
+    networks:
+      - fundo-network
+
+volumes:
+  sqlserver_data:
+
+networks:
+  fundo-network:
+    driver: bridge

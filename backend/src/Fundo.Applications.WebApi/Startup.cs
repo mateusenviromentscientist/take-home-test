@@ -40,10 +40,16 @@ namespace Fundo.Applications.WebApi
             services.AddControllers();
 
             services.AddDbContext<AppDbContext>(opt =>
-                opt.UseSqlServer(Configuration.GetConnectionString("Default")));
+            opt.UseSqlServer(
+                Configuration.GetConnectionString("Default"),
+                    x => x.MigrationsAssembly("Fundo.Applications.Infra")
+            ));
 
             services.AddDbContext<AppIdentityDbContext>(opt =>
-                opt.UseSqlServer(Configuration.GetConnectionString("Default")));
+                opt.UseSqlServer(
+                    Configuration.GetConnectionString("Default"),
+                    x => x.MigrationsAssembly("Fundo.Applications.Infra")
+                ));
 
             services
                 .AddIdentity<AppUser, IdentityRole>(options =>
@@ -71,7 +77,7 @@ namespace Fundo.Applications.WebApi
             .AddJwtBearer(opt =>
             {
                 opt.TokenValidationParameters = new TokenValidationParameters
-            {
+                {
                     ValidateIssuer = true,
                     ValidateAudience = true,
                     ValidateLifetime = true,
@@ -144,8 +150,9 @@ namespace Fundo.Applications.WebApi
                 {
                     c.SwaggerEndpoint("/swagger/v1/swagger.json", "Fundo API v1");
                 });
-
             }
+
+            ApplyMigrationsWithRetry(app, app.ApplicationServices.GetRequiredService<ILogger<Startup>>());
 
             app.UseSerilogRequestLogging();
 
@@ -164,5 +171,47 @@ namespace Fundo.Applications.WebApi
             });
 
         }
+
+        private static void ApplyMigrationsWithRetry(IApplicationBuilder app, Microsoft.Extensions.Logging.ILogger logger)
+        {
+            const int maxRetries = 10;
+
+            using var scope = app.ApplicationServices.CreateScope();
+
+
+            var appDb = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+            var identityDb = scope.ServiceProvider.GetRequiredService<AppIdentityDbContext>();
+
+            Migrate(appDb, logger, maxRetries);
+            Migrate(identityDb, logger, maxRetries);
+
+            static void Migrate(DbContext db, Microsoft.Extensions.Logging.ILogger logger, int maxRetries)
+            {
+                for (var attempt = 1; attempt <= maxRetries; attempt++)
+                {
+                    try
+                    {
+                        logger.LogInformation("Applying migrations for {DbContext}. Attempt {Attempt}/{MaxRetries}",
+                            db.GetType().Name, attempt, maxRetries);
+
+                        db.Database.Migrate();
+
+                        logger.LogInformation("Migrations applied successfully for {DbContext}", db.GetType().Name);
+                        return;
+                    }
+                    catch (Exception ex)
+                    {
+                        logger.LogWarning(ex,
+                            "Failed applying migrations for {DbContext}. Attempt {Attempt}/{MaxRetries}",
+                            db.GetType().Name, attempt, maxRetries);
+
+                        if (attempt == maxRetries) throw;
+
+                        System.Threading.Thread.Sleep(2000);
+                    }
+                }
+            }
+        }
+
     }
 }
