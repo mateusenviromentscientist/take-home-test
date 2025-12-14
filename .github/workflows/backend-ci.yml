@@ -47,7 +47,7 @@ jobs:
         image: mcr.microsoft.com/mssql/server:2022-latest
         env:
           ACCEPT_EULA: "Y"
-          SA_PASSWORD: "Your_password123"
+          MSSQL_SA_PASSWORD: "Your_password123"
         ports:
           - 1433:1433
         options: >-
@@ -80,30 +80,15 @@ jobs:
       - name: Restore
         run: dotnet restore
 
-      - name: Wait SQL Server be ready (docker exec)
-        shell: bash
-        env:
-          SQLSERVER_CONTAINER_ID: ${{ job.services.sqlserver.id }}
-        run: |
-          echo "SQL Server container id: $SQLSERVER_CONTAINER_ID"
-          for i in {1..30}; do
-            if docker exec "$SQLSERVER_CONTAINER_ID" /opt/mssql-tools18/bin/sqlcmd \
-              -S localhost -U sa -P 'Your_password123' -Q "SELECT 1" -C; then
-              echo "SQL Server is ready!"
-              exit 0
-            fi
-            echo "SQL Server not ready yet... ($i/30)"
-            sleep 2
-          done
-          echo "SQL Server did not become ready in time"
-          docker logs "$SQLSERVER_CONTAINER_ID" || true
-          exit 1
-
       - name: Test
         env:
           ASPNETCORE_ENVIRONMENT: "Test"
           ConnectionStrings__Default: "Server=localhost,1433;Database=FundoDb;User Id=sa;Password=Your_password123;TrustServerCertificate=True;"
-        run: dotnet test -c Release --logger "trx;LogFileName=test-results.trx" --results-directory ./TestResults --collect:"XPlat Code Coverage"
+        run: |
+          dotnet test -c Release \
+            --logger "trx;LogFileName=test-results.trx" \
+            --results-directory ./TestResults \
+            --collect:"XPlat Code Coverage"
 
       - name: Upload test results (TRX)
         if: always()
