@@ -2,17 +2,18 @@ name: Backend CI (build & test)
 
 on:
   push:
-    branches: [ "**" ]
   pull_request:
-    branches: [ "main", "master", "develop", "dev" ]
-
 
 permissions:
   contents: read
 
 jobs:
-  build-test:
+  build:
     runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: backend/src
 
     steps:
       - name: Checkout
@@ -27,7 +28,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.nuget/packages
-          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj', '**/packages.lock.json') }}
+          key: ${{ runner.os }}-nuget-${{ hashFiles('backend/src/**/*.csproj', 'backend/src/**/packages.lock.json') }}
           restore-keys: |
             ${{ runner.os }}-nuget-
 
@@ -36,6 +37,34 @@ jobs:
 
       - name: Build
         run: dotnet build --no-restore -c Release
+
+  test:
+    runs-on: ubuntu-latest
+    needs: build
+
+    defaults:
+      run:
+        working-directory: backend/src
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "6.0.x"
+
+      - name: Cache NuGet
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('backend/src/**/*.csproj', 'backend/src/**/packages.lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Restore
+        run: dotnet restore
 
       - name: Test
         run: dotnet test --no-build -c Release --logger "trx;LogFileName=test-results.trx" --collect:"XPlat Code Coverage"
@@ -46,14 +75,14 @@ jobs:
         with:
           name: test-results
           path: |
-            **/TestResults/*.trx
+            backend/src/**/TestResults/*.trx
 
-      - name: Upload coverage (if generated)
+      - name: Upload coverage
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: coverage
           path: |
-            **/TestResults/**/coverage.cobertura.xml
-            **/TestResults/**/coverage.opencover.xml
-            **/TestResults/**/coverage.info
+            backend/src/**/TestResults/**/coverage.cobertura.xml
+            backend/src/**/TestResults/**/coverage.opencover.xml
+            backend/src/**/TestResults/**/coverage.info
