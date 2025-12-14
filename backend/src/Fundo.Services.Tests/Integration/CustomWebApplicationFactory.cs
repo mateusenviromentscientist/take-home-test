@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Fundo.Applications.Infra.Context; // <-- AppDbContext
+using Fundo.Applications.Infra.Context; 
 
 namespace Fundo.Services.Tests.Integration
 {
