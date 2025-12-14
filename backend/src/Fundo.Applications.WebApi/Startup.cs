@@ -39,6 +39,22 @@ namespace Fundo.Applications.WebApi
         {
             services.AddControllers();
 
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAngular", builder =>
+                {
+                    builder
+                        .WithOrigins(
+                            "http://localhost:4200",
+                            "http://localhost:5173"
+                        )
+                        .AllowAnyHeader()
+                        .AllowAnyMethod()
+                        .AllowCredentials();
+                });
+            });
+
+
             services.AddDbContext<AppDbContext>(opt =>
             opt.UseSqlServer(
                 Configuration.GetConnectionString("Default"),
@@ -161,6 +177,8 @@ namespace Fundo.Applications.WebApi
             app.UseMiddleware<ExceptionMiddleware>();
 
             app.UseRouting();
+
+            app.UseCors("AllowAngular");
 
             app.UseAuthentication();
             app.UseAuthorization();
