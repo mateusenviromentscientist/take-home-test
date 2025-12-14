@@ -10,7 +10,7 @@ namespace Fundo.Applications.WebApi.Controllers
 {
     [ApiController]
     [Authorize]
-    [Route("loans")]
+    [Route("loan")]
     public sealed class LoanManagementController : ControllerBase
     {
         private readonly CreateLoanUseCase _createLoanUseCase;
