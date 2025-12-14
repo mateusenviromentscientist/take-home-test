@@ -39,6 +39,15 @@ PAYMENT -> http://localhost:5000/loan/1/payment
 
 ```
 
+> Swagger
+https://localhost:5001/loan/swagger
+
+
+## 📬 API – Postman Collection
+
+The backend API can be tested using Postman.
+
+- 👉 [Download Postman Collection](./postman/LoanApi.postman_collection.json)
 
 ## Notes  
 

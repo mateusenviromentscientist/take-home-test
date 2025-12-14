@@ -1,0 +1,221 @@
+{
+	"info": {
+		"_postman_id": "6bce5005-fb60-4e5e-814a-b1b390d2112a",
+		"name": "LoanApi",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "11824232"
+	},
+	"item": [
+		{
+			"name": "DockerRequests",
+			"item": [
+				{
+					"name": "Auth",
+					"item": [
+						{
+							"name": "Register",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "accept",
+										"value": "*/*"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"email\": \"mateus@email.com\",\n  \"password\": \"Cucabeludo633\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:5000/api/auth/register",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"auth",
+										"register"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Login",
+							"request": {
+								"method": "GET",
+								"header": []
+							},
+							"response": []
+						},
+						{
+							"name": "Me",
+							"request": {
+								"method": "GET",
+								"header": []
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Loans",
+					"item": [
+						{
+							"name": "GetAllLoans",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "accept",
+										"value": "*/*"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjZkMTgxMDExLTU2YTItNDhlMC1hMThhLTU4MGE4ODMyODYxOSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6Im1hdGV1c0BlbWFpbC5jb20iLCJqdGkiOiI4OTQ3NTkwNS1kMGMzLTRlYmUtYTdjMC1iMWRkZTQ1ZGNhYTIiLCJleHAiOjE3NjU3NTIxMTcsImlzcyI6IkZ1bmRvLldlYkFwaSIsImF1ZCI6IkZ1bmRvLkNsaWVudCJ9.7P8_RyD3ljkjlNzHEb0ah9bTtUkswW_gDillFRE2L4o"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:5000/loan",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"loan"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "CreateLoan",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "accept",
+										"value": "*/*"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjZkMTgxMDExLTU2YTItNDhlMC1hMThhLTU4MGE4ODMyODYxOSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6Im1hdGV1c0BlbWFpbC5jb20iLCJqdGkiOiI4OTQ3NTkwNS1kMGMzLTRlYmUtYTdjMC1iMWRkZTQ1ZGNhYTIiLCJleHAiOjE3NjU3NTIxMTcsImlzcyI6IkZ1bmRvLldlYkFwaSIsImF1ZCI6IkZ1bmRvLkNsaWVudCJ9.7P8_RyD3ljkjlNzHEb0ah9bTtUkswW_gDillFRE2L4o"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"amount\": 500,\n  \"currentBalance\": 10,\n  \"applicationName\": \"Teste 2\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:5000/loan",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"loan"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GetLoanById",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "accept",
+										"value": "*/*"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjZkMTgxMDExLTU2YTItNDhlMC1hMThhLTU4MGE4ODMyODYxOSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6Im1hdGV1c0BlbWFpbC5jb20iLCJqdGkiOiI4OTQ3NTkwNS1kMGMzLTRlYmUtYTdjMC1iMWRkZTQ1ZGNhYTIiLCJleHAiOjE3NjU3NTIxMTcsImlzcyI6IkZ1bmRvLldlYkFwaSIsImF1ZCI6IkZ1bmRvLkNsaWVudCJ9.7P8_RyD3ljkjlNzHEb0ah9bTtUkswW_gDillFRE2L4o"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:5000/loan/2",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"loan",
+										"2"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "PayLoan",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "accept",
+										"value": "*/*"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjZkMTgxMDExLTU2YTItNDhlMC1hMThhLTU4MGE4ODMyODYxOSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6Im1hdGV1c0BlbWFpbC5jb20iLCJqdGkiOiI4OTQ3NTkwNS1kMGMzLTRlYmUtYTdjMC1iMWRkZTQ1ZGNhYTIiLCJleHAiOjE3NjU3NTIxMTcsImlzcyI6IkZ1bmRvLldlYkFwaSIsImF1ZCI6IkZ1bmRvLkNsaWVudCJ9.7P8_RyD3ljkjlNzHEb0ah9bTtUkswW_gDillFRE2L4o"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"id\": 2,\n  \"amount\": 50\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:5000/loan/1/payment",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"loan",
+										"1",
+										"payment"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	]
+}
