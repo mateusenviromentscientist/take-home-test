@@ -67,22 +67,18 @@ jobs:
         run: dotnet restore
 
       - name: Test
-        run: dotnet test --no-build -c Release --logger "trx;LogFileName=test-results.trx" --collect:"XPlat Code Coverage"
+        run: dotnet test -c Release --logger "trx;LogFileName=test-results.trx" --results-directory ./TestResults --collect:"XPlat Code Coverage"
 
       - name: Upload test results (TRX)
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: test-results
-          path: |
-            backend/src/**/TestResults/*.trx
+          path: backend/src/TestResults/**/*.trx
 
       - name: Upload coverage
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: coverage
-          path: |
-            backend/src/**/TestResults/**/coverage.cobertura.xml
-            backend/src/**/TestResults/**/coverage.opencover.xml
-            backend/src/**/TestResults/**/coverage.info
+          path: backend/src/TestResults/**/*
