@@ -16,10 +16,29 @@ cd Fundo.Applications.WebApi
 dotnet run
 ```
 
-The following endpoint should return **200 OK**:  
-```http
-GET -> https://localhost:5001/loan
+To run using dockerCompose
+```sh
+docker compose up --build
 ```
+
+The Api has two controllers > Auth && Loan
+> To access the endpoints from loan, the authorization is required. So, is necessary register a new user and login to receive a token
+
+>Register Endpoint: http://localhost:5000/api/auth/register
+
+>Login Endpoint: http://localhost:5000/api/auth/login
+
+The LoanController has 4 endpoints: 
+
+```http
+
+GETALLLOANS -> https://localhost:5001/loan
+CREATElOAN -> http://localhost:5000/loan
+GETLOANBYID -> http://localhost:5000/loan/2002
+PAYMENT -> http://localhost:5000/loan/1/payment
+
+```
+
 
 ## Notes  
 
