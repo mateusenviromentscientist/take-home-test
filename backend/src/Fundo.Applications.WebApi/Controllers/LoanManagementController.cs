@@ -35,36 +35,46 @@ namespace Fundo.Applications.WebApi.Controllers
 
         [HttpGet]
         public async Task<IActionResult> GetAllLoans(CancellationToken cancellationToken)
-            => Ok(await _getAllLoansUseCase.GetAllLoansAsync(cancellationToken));
+        {
+            var loans = await _getAllLoansUseCase.GetAllLoansAsync(cancellationToken);
+            return Ok(loans);
+        }
 
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetLoanById([FromRoute] int id, CancellationToken cancellationToken)
         {
-            var request = new GetLoanByIdRequest(id);
             _logger.LogInformation("GetLoanById request received. Id={Id}", id);
 
-            var response = await _getLoanByIdUseCase.GetLoanByIdAsync(request, cancellationToken);
-            return Ok(response);
+            var request = new GetLoanByIdRequest(id);
+            var loan = await _getLoanByIdUseCase.GetLoanByIdAsync(request, cancellationToken);
+
+            if (loan is null)
+                return NotFound();
+
+            return Ok(loan);
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateLoan([FromBody] CreateLoanRequest request, CancellationToken cancellationToken)
+        public async Task<IActionResult> CreateLoan(
+            [FromBody] CreateLoanRequest request,
+            CancellationToken cancellationToken)
         {
             _logger.LogInformation("CreateLoan request received");
 
-            var result = await _createLoanUseCase.CreateLoanAsync(request, cancellationToken);
-
-            return Created("loans", result);
+            var success = await _createLoanUseCase.CreateLoanAsync(request, cancellationToken);
+            return Ok(success);
         }
 
         [HttpPost("{id:int}/payment")]
-        public async Task<IActionResult> LoanPayment([FromRoute] int id, [FromBody] PayLoanRequest request, CancellationToken cancellationToken)
+        public async Task<IActionResult> LoanPayment(
+            [FromRoute] int id,
+            [FromBody] PayLoanRequest request,
+            CancellationToken cancellationToken)
         {
             _logger.LogInformation("PayLoan request received. Id={Id}", id);
 
-            var result = await _payLoanUseCase.PayLoanAsync(request, cancellationToken);
-
-            return Created("{id:int}/payment", result);
+            var success = await _payLoanUseCase.PayLoanAsync(request, cancellationToken);
+            return Ok(success);
         }
     }
 }

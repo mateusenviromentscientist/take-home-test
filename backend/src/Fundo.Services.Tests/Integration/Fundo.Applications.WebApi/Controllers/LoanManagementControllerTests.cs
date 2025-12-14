@@ -1,24 +1,27 @@
 using Microsoft.AspNetCore.Mvc.Testing;
+using System;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
 namespace Fundo.Services.Tests.Integration
 {
-    public class LoanManagementControllerTests
-        : IClassFixture<CustomWebApplicationFactory>
+    public class LoanManagementControllerTests : IClassFixture<CustomWebApplicationFactory>
     {
         private readonly HttpClient _client;
+        private readonly CustomWebApplicationFactory _factory;
 
         public LoanManagementControllerTests(CustomWebApplicationFactory factory)
         {
+            _factory = factory;
+
             _client = factory.CreateClient(new WebApplicationFactoryClientOptions
             {
                 AllowAutoRedirect = false
             });
-
 
             _client.DefaultRequestHeaders.Authorization =
                 new AuthenticationHeaderValue("Test", "token");
@@ -27,65 +30,56 @@ namespace Fundo.Services.Tests.Integration
         [Fact]
         public async Task GetAllLoans_ShouldReturnOk()
         {
-            // Act
             var response = await _client.GetAsync("/loans");
-
-            // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
 
         [Fact]
-        public async Task GetLoanById_ShouldReturnOk()
+        public async Task CreateLoan_ShouldReturnOk_AndTrue()
         {
-            // Act
-            var response = await _client.GetAsync("/loans/1");
-
-            // Assert
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        }
-
-        [Fact]
-        public async Task CreateLoan_ShouldReturnCreated()
-        {
-            // Arrange
             var json = "{ \"amount\": 100, \"applicationName\": \"Mateus\", \"currentBalance\": 100 }";
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-            var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
-
-            // Act
             var response = await _client.PostAsync("/loans", content);
 
-            // Assert
-            Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+            if (response.StatusCode != HttpStatusCode.OK)
+            {
+                var body = await response.Content.ReadAsStringAsync();
+                throw new Exception($"Expected 200, got {(int)response.StatusCode} {response.StatusCode}\nBody:\n{body}");
+            }
+
+            var bodyText = await response.Content.ReadAsStringAsync();
+            Assert.Equal("true", bodyText.Trim().ToLowerInvariant());
         }
 
         [Fact]
-        public async Task LoanPayment_ShouldReturnCreated()
+        public async Task GetLoanById_WhenDoesNotExist_ShouldReturnNotFound()
         {
-            // Arrange
-            var json = "{ \"id\": 1, \"amount\": 50 }";
 
+            var response = await _client.GetAsync("/loans/999999");
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        }
 
-            var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+        [Fact]
+        public async Task LoanPayment_WhenDoesNotExist_ShouldReturnNotFound()
+        {
+            var json = "{ \"amount\": 50 }";
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-            // Act
-            var response = await _client.PostAsync("/loans/1/payment", content);
+            var response = await _client.PostAsync("/loans/999999/payment", content);
 
-            // Assert
-            Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
 
         [Fact]
         public async Task GetAllLoans_WithoutAuthorization_ShouldReturn401()
         {
-            // Arrange
-            var client = new WebApplicationFactory<Fundo.Applications.WebApi.Startup>()
-                .CreateClient();
+            var client = _factory.CreateClient(new WebApplicationFactoryClientOptions
+            {
+                AllowAutoRedirect = false
+            });
 
-            // Act
             var response = await client.GetAsync("/loans");
-
-            // Assert
             Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
         }
     }
