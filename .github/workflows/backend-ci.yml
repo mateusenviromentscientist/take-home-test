@@ -86,7 +86,8 @@ jobs:
 
       - name: Test
         env:
-          ASPNETCORE_ENVIRONMENT: "Test"
+          ASPNETCORE_ENVIRONMENT: "Development"
+          ASPNETCORE_DETAILED_ERRORS: "true"
           ConnectionStrings__Default: "Server=localhost,1433;Database=FundoDb;User Id=sa;Password=Your_password123;TrustServerCertificate=True;"
         run: |
           dotnet test -c Release \
