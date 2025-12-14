@@ -17,7 +17,7 @@ export class LoanService {
 
   getAll(): Observable<LoanTableModel[]> {
     return this.http
-      .get<LoansApiResponse>(`${environment.baseUrl}loans`)
+      .get<LoansApiResponse>(`${environment.baseUrl}loan`)
       .pipe(
         map(res =>
           (res.loanModels ?? []).map(l => this.toTableModel(l))
