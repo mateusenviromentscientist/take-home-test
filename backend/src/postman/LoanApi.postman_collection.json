@@ -28,7 +28,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"email\": \"mateus@email.com\",\n  \"password\": \"Cucabeludo633\"\n}",
+									"raw": "{\n  \"email\": \"mateus@email.com\",\n  \"password\": \"MyPass123\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
