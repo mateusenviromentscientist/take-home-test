@@ -12,6 +12,7 @@ Before accessing the frontend, make sure that:
 2. At least one **loan** has been created in the backend  
    (via **Postman** or **Swagger**)
 3. The backend API is running
+4. Create a Loan in the backend to check in the table
 
 ---
 

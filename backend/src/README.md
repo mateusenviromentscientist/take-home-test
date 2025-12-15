@@ -1,22 +1,7 @@
 ## Running the Backend
 
-To build the backend, navigate to the `src` folder and run:  
-```sh
-dotnet build
-```
 
-To run all tests:  
-```sh
-dotnet test
-```
-
-To start the main API:  
-```sh
-cd Fundo.Applications.WebApi  
-dotnet run
-```
-
-To run using dockerCompose
+To run application
 ```sh
 docker compose up --build
 ```
